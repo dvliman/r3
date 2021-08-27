@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-export default function MoreScreen() {
+export default function HomeScreen() {
   return (
     <View>
-      <Text>more</Text>
+      <Text>home</Text>
     </View>
   )
 }
