@@ -5,7 +5,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MoreScreen from './MoreScreen';
 import HomeScreen from './HomeScreen';
-import { Home as HomeIcon, FaceVeryHappy } from 'akar-icons';
+
+import HomeIcon from './assets/icons/home.png';
+import HomeActiveIcon from './assets/icons/home-active.png';
+import AboutIcon from './assets/icons/about.png';
+import AboutActiveIcon from './assets/icons/about-active.png';
 
 const Home = createNativeStackNavigator();
 const More = createNativeStackNavigator();
@@ -35,11 +39,11 @@ function TabNavigator() {
           let icon;
 
           if (route.name === 'Home') {
-            icon = focused ? TabHomeActiveImage : TabHomeImage;
+            icon = focused ? HomeActiveIcon : HomeIcon;
           } else if (route.name === 'More') {
-            icon = focused ? TabMoreActiveImage : TabMoreImage;
+            icon = focused ? AboutActiveIcon : AboutIcon;
           }
-          return <HomeIcon/>;
+          return <Image source={icon}/>;
         },
       })}
     >

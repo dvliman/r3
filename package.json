@@ -12,7 +12,6 @@
     "@react-navigation/bottom-tabs": "^6.0.5",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",
-    "akar-icons": "^1.8.11",
     "expo": "~42.0.1",
     "expo-location": "~12.1.2",
     "expo-permissions": "~12.1.1",
