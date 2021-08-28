@@ -59,9 +59,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-      screenOptions={{ headerShown: false }}
-      intialRouteName="Tab"
-      headerMode="screen"
+        screenOptions={{ headerShown: false }}
+        intialRouteName="Tab"
+        headerMode="screen"
       >
         <Stack.Screen name="Tab" component={TabNavigator} />
       </Stack.Navigator>
