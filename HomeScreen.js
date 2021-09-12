@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import * as Location from 'expo-location';
-import { View, StyleSheet, Button, Text } from 'react-native';
+import { View, StyleSheet, Button, Text, TouchableHighlight, Alert, Modal, TextInput } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen() {
-  const [location, setLocation] = useState(null);
   const [ui, setUI] = useState('ui/ready');
+  const [name, setName] = useState('');
+  const [location, setLocation] = useState(null);
+  const [saveModalVisible, setSaveSaveModalVisible] = useState(false);
 
   const handleGetLocation = async function() {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -20,8 +23,17 @@ export default function HomeScreen() {
       .catch(_ => setUI('ui/location-error'));
   }
 
-  const handleSaveLocation = () => {
-    console.log('handleSaveLocation');
+  const toggleSaveModal = () =>
+    setSaveSaveModalVisible(!saveModalVisible);
+
+  const handleSaveLocation = async () => {
+    await saveLocation({ ...location, name: name });
+    toggleSaveModal();
+  }
+
+  const handleCancelSaveLocation = () => {
+    setName('');
+    toggleSaveModal();
   }
 
   if (ui === 'ui/ready') {
@@ -30,7 +42,6 @@ export default function HomeScreen() {
         <View style={styles.getLocationButton}>
           <Button
             title="Get Location"
-            color="#841584"
             accessibilityLabel="Get Location"
             onPress={async () => handleGetLocation()}
           />
@@ -76,10 +87,7 @@ export default function HomeScreen() {
   }
 
   if (ui === 'ui/location-granted' && location != null) {
-    // TODO: display location, parse dms
-    // display add to saved location, pop up a modal,
-    // list of saved location
-    console.log(location);
+    // TODO: after save, show some indication
     return (
       <View style={styles.columnContainer}>
         <View style={styles.rowContainer}>
@@ -97,8 +105,37 @@ export default function HomeScreen() {
         <Button
           title="Save location"
           accessibilityLabel="Save location"
-          onPress={async () => handleSaveLocation()}
+          onPress={toggleSaveModal}
         />
+
+        <View style={styles.centeredView}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={saveModalVisible}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <TextInput
+                  style={styles.modalText}
+                  placeholder="Set a memorable name"
+                  onChangeText={setName}
+                  value={name}
+                />
+                <TouchableHighlight
+                  style={styles.openButton}
+                  onPress={async () => handleSaveLocation()}>
+                  <Text style={styles.textStyle}>Save Location</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  style={styles.openButton}
+                  onPress={handleCancelSaveLocation}>
+                  <Text style={styles.textStyle}>Cancel</Text>
+                </TouchableHighlight>
+              </View>
+            </View>
+          </Modal>
+        </View>
       </View>
     )
   }
@@ -134,6 +171,16 @@ function convertDMSLong(lng) {
   return longitude + " " + longitudeCardinal;
 }
 
+async function getLocations() {
+  const jsonValue = await AsyncStorage.getItem('@locations') || '[]';
+  return JSON.parse(jsonValue).sort((a, b) => a['timestamp'] < b['timestamp']);
+}
+
+async function saveLocation(location) {
+  const locations = await getLocations();
+  await AsyncStorage.setItem('@locations', JSON.stringify([...locations, location]));
+}
+
 const styles = StyleSheet.create({
   columnContainer: {
     flexDirection: 'column',
@@ -144,10 +191,32 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   getLocationButton: {
-    backgroundColor: 'grey',
-    borderWidth: 0,
     height: 40,
     justifyContent: 'center',
     alignSelf: 'center',
-  }
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    backgroundColor: 'white',
+    padding: 35,
+    alignItems: 'center',
+  },
+  openButton: {
+    backgroundColor: 'blue',
+    padding: 10,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
 });
