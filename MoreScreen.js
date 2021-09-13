@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+
 // home screen and more screen
 // more screen contains just some wording
 // home screen

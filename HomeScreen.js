@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import * as Location from 'expo-location';
-import { View, StyleSheet, Button, Text, TouchableHighlight, Alert, Modal, TextInput } from 'react-native';
+import { View, StyleSheet, Button, Text, Modal, TextInput, KeyboardAvoidingView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomButton from './Button';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
-  const emptyName = '';
   const [ui, setUI] = useState('ui/ready');
-  const [name, setName] = useState(emptyName);
+  const [name, setName] = useState(null);
   const [location, setLocation] = useState(null);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
 
-  const handleGetLocation = async function() {
+  const handleGetLocation = async function () {
     const { status } = await Location.requestForegroundPermissionsAsync();
     setUI(status === 'granted' ?
       'ui/location-loading' :
@@ -33,20 +34,14 @@ export default function HomeScreen() {
   }
 
   const handleCancelSaveLocation = () => {
-    setName(emptyName);
+    setName(null);
     toggleSaveModal();
   }
 
   if (ui === 'ui/ready') {
     return (
       <View style={styles.columnContainer}>
-        <View style={styles.getLocationButton}>
-          <Button
-            title="Get Location"
-            accessibilityLabel="Get Location"
-            onPress={async () => handleGetLocation()}
-          />
-        </View>
+        <CustomButton iconName="location-outline" title="Get Location" onPress={async () => handleGetLocation()} />
       </View>
     );
   }
@@ -72,7 +67,9 @@ export default function HomeScreen() {
   if (ui === 'ui/location-loading') {
     return (
       <View style={styles.columnContainer}>
-        <Text>loading location</Text>
+        <Text style={{ textAlign: 'center' }}>
+          Loading location...
+        </Text>
       </View>
     )
   }
@@ -80,7 +77,7 @@ export default function HomeScreen() {
   if (ui === 'ui/location-error') {
     return (
       <View style={styles.columnContainer}>
-        <Text>
+        <Text style={{ textAlign: 'center' }}>
           Location error
         </Text>
       </View>
@@ -95,52 +92,65 @@ export default function HomeScreen() {
 
     return (
       <View style={styles.columnContainer}>
-        <View style={styles.rowContainer}>
-          <Text>Lat: {location['coords']['latitude']}</Text>
-          <Text>Long: {location['coords']['longitude']}</Text>
+        <View style={styles.contentContainer}>
+          <View style={styles.rowContainer}>
+            <Text style={styles.text}>Lat: {location['coords']['latitude']}</Text>
+            <Text style={styles.text}>Long: {location['coords']['longitude']}</Text>
+          </View>
+          <View style={styles.rowContainer}>
+            <Text style={styles.text}>{convertDMSLat(location['coords']['latitude'])}</Text>
+            <Text style={styles.text}>{convertDMSLong(location['coords']['longitude'])}</Text>
+          </View>
+          <View style={styles.rowContainer}>
+            <Text style={styles.text}>Accuracy: {location['coords']['accuracy']} meters</Text>
+            <Text style={styles.text}>Altitude: {location['coords']['altitude']} meters</Text>
+          </View>
         </View>
-        <View style={styles.rowContainer}>
-          <Text>{convertDMSLat(location['coords']['latitude'])}</Text>
-          <Text>{convertDMSLong(location['coords']['longitude'])}</Text>
-        </View>
-        <View style={styles.rowContainer}>
-          <Text>Accuracy: {location['coords']['accuracy']} meters</Text>
-          <Text>Altitude: {location['coords']['altitude']} meters</Text>
-        </View>
-        <Button
-          title="Save location"
-          accessibilityLabel="Save location"
-          onPress={toggleSaveModal}
-        />
+        <CustomButton iconName="bookmark-outline" title="Save Location" onPress={toggleSaveModal} />
 
-        <View style={styles.centeredView}>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={saveModalVisible}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={saveModalVisible}
+        >
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.centeredView}
           >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
+            <View style={styles.modalView}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalHeaderText}>Give It a Name!</Text>
+              </View>
+              <View style={styles.modalBody}>
                 <TextInput
-                  style={styles.modalText}
+                  style={styles.modalInput}
                   placeholder="Set a memorable name"
                   onChangeText={setName}
                   value={name}
+                  autoFocus={true}
                 />
-                <TouchableHighlight
-                  style={styles.openButton}
-                  onPress={async () => handleSaveLocation()}>
-                  <Text style={styles.textStyle}>Save Location</Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                  style={styles.openButton}
-                  onPress={handleCancelSaveLocation}>
-                  <Text style={styles.textStyle}>Cancel</Text>
-                </TouchableHighlight>
+                <View style={styles.modalButtons}>
+                  <CustomButton
+                    title="Cancel"
+                    onPress={handleCancelSaveLocation}
+                    customStyles={{
+                      flex: 1,
+                      marginRight: 12,
+                      backgroundColor: 'lightslategrey',
+                    }}
+                  />
+                  <CustomButton
+                    title="Save"
+                    onPress={async () => handleSaveLocation()}
+                    customStyles={{
+                      flex: 2
+                    }}
+                  />
+                </View>
               </View>
             </View>
-          </Modal>
-        </View>
+          </KeyboardAvoidingView>
+        </Modal>
       </View>
     )
   }
@@ -188,40 +198,66 @@ async function saveLocation(location) {
 
 const styles = StyleSheet.create({
   columnContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
+    flex: 1,
+    alignContent: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    backgroundColor: 'aliceblue',
+  },
+  contentContainer: {
+    backgroundColor: 'white',
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 12,
+    marginBottom: 16,
+    borderRadius: 8,
   },
   rowContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    marginBottom: 12,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightsteelblue',
   },
-  getLocationButton: {
-    height: 40,
-    justifyContent: 'center',
-    alignSelf: 'center',
+  text: {
+    flex: 1,
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    marginTop: 22,
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalView: {
     backgroundColor: 'white',
-    padding: 35,
     alignItems: 'center',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    width: '100%',
+    alignItems: 'stretch',
   },
-  openButton: {
-    backgroundColor: 'blue',
-    padding: 10,
+  modalHeader: {
+    borderBottomColor: '#e3e3e3',
+    borderBottomWidth: 1,
   },
-  textStyle: {
-    color: 'white',
+  modalHeaderText: {
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'center',
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
+  modalBody: {
+    padding: 24,
   },
+  modalInput: {
+    marginBottom: 24,
+    backgroundColor: '#f2f2f2',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontSize: 18,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  }
 });
