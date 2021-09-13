@@ -4,10 +4,11 @@ import { View, StyleSheet, Button, Text, TouchableHighlight, Alert, Modal, TextI
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen() {
+  const emptyName = '';
   const [ui, setUI] = useState('ui/ready');
-  const [name, setName] = useState('');
+  const [name, setName] = useState(emptyName);
   const [location, setLocation] = useState(null);
-  const [saveModalVisible, setSaveSaveModalVisible] = useState(false);
+  const [saveModalVisible, setSaveModalVisible] = useState(false);
 
   const handleGetLocation = async function() {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -24,7 +25,7 @@ export default function HomeScreen() {
   }
 
   const toggleSaveModal = () =>
-    setSaveSaveModalVisible(!saveModalVisible);
+    setSaveModalVisible(!saveModalVisible);
 
   const handleSaveLocation = async () => {
     await saveLocation({ ...location, name: name });
@@ -32,7 +33,7 @@ export default function HomeScreen() {
   }
 
   const handleCancelSaveLocation = () => {
-    setName('');
+    setName(emptyName);
     toggleSaveModal();
   }
 
@@ -88,6 +89,10 @@ export default function HomeScreen() {
 
   if (ui === 'ui/location-granted' && location != null) {
     // TODO: after save, show some indication
+    // either have [list of saved locations] after clicking the header icon
+    // or just have the list at the bottom of this get location button
+    // (user can see the new named location)
+
     return (
       <View style={styles.columnContainer}>
         <View style={styles.rowContainer}>
