@@ -1,15 +1,10 @@
 import React from 'react';
-import { Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MoreScreen from './MoreScreen';
 import HomeScreen from './HomeScreen';
-
-import HomeIcon from './assets/icons/home.png';
-import HomeActiveIcon from './assets/icons/home-active.png';
-import AboutIcon from './assets/icons/about.png';
-import AboutActiveIcon from './assets/icons/about-active.png';
+import { Ionicons } from '@expo/vector-icons';
 
 const Home = createNativeStackNavigator();
 const More = createNativeStackNavigator();
@@ -31,20 +26,30 @@ function MoreStack() {
   );
 }
 
+
 function TabNavigator() {
+  const primaryColor = 'mediumblue';
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
-          let icon;
+          let iconName;
 
           if (route.name === 'Home') {
-            icon = focused ? HomeActiveIcon : HomeIcon;
+            iconName = `ios-home${focused ? '' : '-outline'}`;
           } else if (route.name === 'More') {
-            icon = focused ? AboutActiveIcon : AboutIcon;
+            iconName = `ios-information-circle${focused ? '' : '-outline'}`;
           }
-          return <Image source={icon}/>;
+          return <Ionicons name={iconName} size={24} color={primaryColor} />;
         },
+        tabBarStyle: {
+          height: 96,
+        },
+        tabBarItemStyle: {
+          padding: 10,
+        },
+        tabBarActiveTintColor: primaryColor,
+        tabBarInactiveTintColora: 'gray',
       })}
     >
       <Tab.Screen name="Home" component={HomeStack} />
