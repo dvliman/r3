@@ -93,7 +93,7 @@ export default function HomeScreen() {
             <Text style={styles.textLabel}>Latitude (LAT)</Text>
           </View>
           <View style={styles.coordsContainer}>
-            <Text style={styles.textCoords}>{location['coords']['latitude']}</Text>
+            <Text style={styles.textCoords}>{location['coords']['latitude'].toFixed(6)}</Text>
             <Text style={styles.textDMS}>{convertDMSLat(location['coords']['latitude'])}</Text>
           </View>
         </View>
@@ -102,7 +102,7 @@ export default function HomeScreen() {
             <Text style={styles.textLabel}>Longitude (LONG)</Text>
           </View>
           <View style={styles.coordsContainer}>
-            <Text style={styles.textCoords}>{location['coords']['longitude']}</Text>
+            <Text style={styles.textCoords}>{location['coords']['longitude'].toFixed(6)}</Text>
             <Text style={styles.textDMS}>{convertDMSLong(location['coords']['longitude'])}</Text>
           </View>
         </View>
@@ -111,13 +111,13 @@ export default function HomeScreen() {
             <View style={styles.labelContainer}>
               <Text style={styles.textLabel}>Accuracy</Text>
             </View>
-            <Text style={[styles.textCoords, { fontSize: 36, paddingVertical: 8 }]}>{location['coords']['accuracy']} m</Text>
+            <Text style={[styles.textCoords, { fontSize: 36, paddingVertical: 8 }]}>{location['coords']['accuracy'].toFixed(1)} m</Text>
           </View>
           <View style={[styles.metersContainer, { marginLeft: 8 }]}>
             <View style={styles.labelContainer}>
               <Text style={styles.textLabel}>Altitute</Text>
             </View>
-            <Text style={[styles.textCoords, { fontSize: 36, paddingVertical: 8 }]}>{location['coords']['altitude']} m</Text>
+            <Text style={[styles.textCoords, { fontSize: 36, paddingVertical: 8 }]}>{location['coords']['altitude'].toFixed(1)} m</Text>
           </View>
         </View>
         <CustomButton iconName="bookmark-outline" title="Save Location" onPress={toggleSaveModal} />
