@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import * as Location from 'expo-location';
-import { View, StyleSheet, Button, Text, Modal, TextInput, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Text, Modal, TextInput, KeyboardAvoidingView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from './Button';
-import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
   const [ui, setUI] = useState('ui/ready');
@@ -51,15 +50,10 @@ export default function HomeScreen() {
     // in settings, open settings button
     return (
       <View style={styles.columnContainer}>
-        <Text>
-          Location is denied
+        <CustomButton iconName="location-outline" title="Get Location" onPress={async () => handleGetLocation()} />
+        <Text style={{ textAlign: 'center', marginTop: 12, color: 'red' }}>
+          Location is denied,  please allow location access.
         </Text>
-        <Button
-          title="Get Location"
-          color="#841584"
-          accessibilityLabel="Get Location"
-          onPress={async () => handleGetLocation()}
-        />
       </View>
     );
   }
@@ -67,7 +61,8 @@ export default function HomeScreen() {
   if (ui === 'ui/location-loading') {
     return (
       <View style={styles.columnContainer}>
-        <Text style={{ textAlign: 'center' }}>
+        <ActivityIndicator color="mediumblue" />
+        <Text style={{ textAlign: 'center', marginTop: 12 }}>
           Loading location...
         </Text>
       </View>
@@ -77,8 +72,9 @@ export default function HomeScreen() {
   if (ui === 'ui/location-error') {
     return (
       <View style={styles.columnContainer}>
-        <Text style={{ textAlign: 'center' }}>
-          Location error
+        <CustomButton iconName="location-outline" title="Get Location" onPress={async () => handleGetLocation()} />
+        <Text style={{ textAlign: 'center', marginTop: 12, color: 'red' }}>
+          Location error, please allow location access.
         </Text>
       </View>
     );
@@ -91,19 +87,37 @@ export default function HomeScreen() {
     // (user can see the new named location)
 
     return (
-      <View style={styles.columnContainer}>
-        <View style={styles.contentContainer}>
-          <View style={styles.rowContainer}>
-            <Text style={styles.text}>Lat: {location['coords']['latitude']}</Text>
-            <Text style={styles.text}>Long: {location['coords']['longitude']}</Text>
+      <View style={[styles.columnContainer, { justifyContent: 'flex-start' }]}>
+        <View style={styles.rowContainer}>
+          <View style={styles.labelContainer}>
+            <Text style={styles.textLabel}>Latitude (LAT)</Text>
           </View>
-          <View style={styles.rowContainer}>
-            <Text style={styles.text}>{convertDMSLat(location['coords']['latitude'])}</Text>
-            <Text style={styles.text}>{convertDMSLong(location['coords']['longitude'])}</Text>
+          <View style={styles.coordsContainer}>
+            <Text style={styles.textCoords}>{location['coords']['latitude']}</Text>
+            <Text style={styles.textDMS}>{convertDMSLat(location['coords']['latitude'])}</Text>
           </View>
-          <View style={styles.rowContainer}>
-            <Text style={styles.text}>Accuracy: {location['coords']['accuracy']} meters</Text>
-            <Text style={styles.text}>Altitude: {location['coords']['altitude']} meters</Text>
+        </View>
+        <View style={styles.rowContainer}>
+          <View style={styles.labelContainer}>
+            <Text style={styles.textLabel}>Longitude (LONG)</Text>
+          </View>
+          <View style={styles.coordsContainer}>
+            <Text style={styles.textCoords}>{location['coords']['longitude']}</Text>
+            <Text style={styles.textDMS}>{convertDMSLong(location['coords']['longitude'])}</Text>
+          </View>
+        </View>
+        <View style={styles.splitContainer}>
+          <View style={[styles.metersContainer, { marginRight: 8 }]}>
+            <View style={styles.labelContainer}>
+              <Text style={styles.textLabel}>Accuracy</Text>
+            </View>
+            <Text style={[styles.textCoords, { fontSize: 36, paddingVertical: 8 }]}>{location['coords']['accuracy']} m</Text>
+          </View>
+          <View style={[styles.metersContainer, { marginLeft: 8 }]}>
+            <View style={styles.labelContainer}>
+              <Text style={styles.textLabel}>Altitute</Text>
+            </View>
+            <Text style={[styles.textCoords, { fontSize: 36, paddingVertical: 8 }]}>{location['coords']['altitude']} m</Text>
           </View>
         </View>
         <CustomButton iconName="bookmark-outline" title="Save Location" onPress={toggleSaveModal} />
@@ -213,14 +227,52 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   rowContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     marginBottom: 12,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'lightsteelblue',
+    backgroundColor: 'white',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'lightgray'
   },
-  text: {
+  labelContainer: {
+    borderBottomColor: 'lightgray',
+    borderBottomWidth: 1,
+    paddingVertical: 8
+  },
+  textLabel: {
+    fontSize: 12,
+    color: 'slategray',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    textAlign: 'center',
+  },
+  coordsContainer: {
+    paddingTop: 8,
+    paddingBottom: 16,
+    paddingHorizontal: 16,
+  },
+  textCoords: {
+    fontSize: 56,
+    color: 'mediumblue',
+    fontWeight: "300",
+    textAlign: 'center',
+    marginBottom: 2
+  },
+  textDMS: {
+    color: 'mediumblue',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  splitContainer: {
+    flexDirection: 'row',
+    marginBottom: 16,
+  },
+  metersContainer: {
     flex: 1,
+    backgroundColor: 'white',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'lightgray'
   },
   centeredView: {
     flex: 1,
@@ -244,7 +296,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 16,
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: '900',
   },
   modalBody: {
     padding: 24,
