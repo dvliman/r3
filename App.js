@@ -5,27 +5,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MoreScreen from './MoreScreen';
 import HomeScreen from './HomeScreen';
 import { Ionicons } from '@expo/vector-icons';
+import { Button } from 'react-native';
+import * as Sentry from 'sentry-expo';
 
-const Home = createNativeStackNavigator();
-const More = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
-function HomeStack() {
-  return (
-    <Home.Navigator screenOptions={{ headerShown: false }}>
-      <Home.Screen name="HomeScreen" component={HomeScreen} />
-    </Home.Navigator>
-  );
-}
-
-function MoreStack() {
-  return (
-    <More.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="MoreScreen" component={MoreScreen} />
-    </More.Navigator>
-  );
-}
-
 
 function TabNavigator() {
   const primaryColor = 'mediumblue';
@@ -52,22 +35,34 @@ function TabNavigator() {
         tabBarInactiveTintColora: 'gray',
       })}
     >
-      <Tab.Screen name="Home" component={HomeStack} />
-      <Tab.Screen name="More" component={MoreStack} />
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          headerRight: () => (
+            <Button
+              onPress={() => alert('navigate to saved locations')}
+              title="Saved Locations"
+            />
+          ),
+        }}/>
+      <Tab.Screen name="More" component={MoreScreen} />
     </Tab.Navigator>
   );
 }
+
+Sentry.init({
+  dsn: "https://05049c4a63824984ac1cb1066a1d779a@o254208.ingest.sentry.io/5965558",
+  enableInExpoDevelopment: true,
+  debug: true,
+});
 
 export default function App() {
   const Stack = createNativeStackNavigator();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{ headerShown: false }}
-        intialRouteName="Tab"
-        headerMode="screen"
-      >
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Tab" component={TabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>

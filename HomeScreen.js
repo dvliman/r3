@@ -286,7 +286,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     width: '100%',
-    alignItems: 'stretch',
   },
   modalHeader: {
     borderBottomColor: '#e3e3e3',
