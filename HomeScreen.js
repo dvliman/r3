@@ -200,7 +200,7 @@ function convertDMSLong(lng) {
   return longitude + " " + longitudeCardinal;
 }
 
-async function getLocations() {
+export async function getLocations() {
   const jsonValue = await AsyncStorage.getItem('@locations') || '[]';
   return JSON.parse(jsonValue).sort((a, b) => a['timestamp'] < b['timestamp']);
 }

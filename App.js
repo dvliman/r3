@@ -7,23 +7,26 @@ import HomeScreen from './HomeScreen';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from 'react-native';
 import * as Sentry from 'sentry-expo';
+import SavedLocationsScreen from './SavedLocationsScreen';
 
-const Tab = createBottomTabNavigator();
+
+function bottomIcon(route, focused) {
+  if (route.name === 'Home') {
+    return `ios-home${focused ? '' : '-outline'}`;
+  } else if (route.name === 'More') {
+    return `ios-information-circle${focused ? '' : '-outline'}`;
+  }
+}
+
+const BottomTab = createBottomTabNavigator();
 
 function TabNavigator() {
   const primaryColor = 'mediumblue';
   return (
-    <Tab.Navigator
+    <BottomTab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
-          let iconName;
-
-          if (route.name === 'Home') {
-            iconName = `ios-home${focused ? '' : '-outline'}`;
-          } else if (route.name === 'More') {
-            iconName = `ios-information-circle${focused ? '' : '-outline'}`;
-          }
-          return <Ionicons name={iconName} size={24} color={primaryColor} />;
+          return <Ionicons name={bottomIcon(route, focused)} size={24} color={primaryColor} />;
         },
         tabBarStyle: {
           height: 96,
@@ -32,22 +35,23 @@ function TabNavigator() {
           padding: 10,
         },
         tabBarActiveTintColor: primaryColor,
-        tabBarInactiveTintColora: 'gray',
+        tabBarInactiveTintColor: 'gray',
       })}
     >
-      <Tab.Screen
+      <BottomTab.Screen
         name="Home"
         component={HomeScreen}
-        options={{
+        options={({route, navigation}) => ({
           headerRight: () => (
+            // TODO: change this to an icon that have a little indicator there is something new
             <Button
-              onPress={() => alert('navigate to saved locations')}
+              onPress={() => navigation.navigate('SavedLocations')}
               title="Saved Locations"
             />
           ),
-        }}/>
-      <Tab.Screen name="More" component={MoreScreen} />
-    </Tab.Navigator>
+        })}/>
+      <BottomTab.Screen name="More" component={MoreScreen} />
+    </BottomTab.Navigator>
   );
 }
 
@@ -62,8 +66,9 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="Tab" component={TabNavigator} />
+        <Stack.Screen name="SavedLocations" component={SavedLocationsScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   )
