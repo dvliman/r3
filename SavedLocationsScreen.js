@@ -18,11 +18,13 @@ const DATA = [
   },
 ];
 
-const Item = ({ title }) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
-  </View>
-);
+const Item = ({ location }) => {
+  return (
+    <View style={styles.item}>
+      <Text style={styles.title}>some text</Text>
+    </View>
+  );
+};
 
 export default function SavedLocationsScreen() {
   const navigation = useNavigation();
@@ -37,13 +39,24 @@ export default function SavedLocationsScreen() {
     getLocations().then(setLocations);
   }, []);
 
+  // TODO: somehow there is 4 prints for undefined
   console.log(locations);
+
+  const EmptyListMessage = ({item}) => {
+    return (
+      <Text>
+        No Data Found
+      </Text>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={DATA}
+        data={locations}
         renderItem={({ item }) => (<Item title={item.title} />)}
         keyExtractor={item => item.id}
+        ListEmptyComponent={EmptyListMessage}
       />
     </SafeAreaView>
   );
