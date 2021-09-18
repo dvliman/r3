@@ -16,7 +16,7 @@ export default function HomeScreen() {
       'ui/location-loading' :
       'ui/location-denied');
 
-    await Location.getCurrentPositionAsync({})
+    await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Lowest })
       .then(location => {
         setLocation(location);
         setUI('ui/location-granted');
@@ -189,8 +189,8 @@ function toDegreesMinutesAndSeconds(coordinate) {
 function convertDMSLat(lat) {
   const latitude = toDegreesMinutesAndSeconds(lat);
   const latitudeCardinal = lat >= 0 ? 'N' : 'S';
-  return latitude + " " + latitudeCardinal
 
+  return latitude + " " + latitudeCardinal
 }
 
 function convertDMSLong(lng) {
