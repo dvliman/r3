@@ -2,8 +2,8 @@ import React from 'react';
 import { Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function Button(props) {
-  const { onPress, title, iconName, customStyles } = props;
+const Button = (props) => {
+  const { onPress, title, iconName, customStyles, iconColor } = props;
   return (
     <Pressable
       style={({ pressed }) => [{
@@ -14,7 +14,7 @@ export default function Button(props) {
       ]}
       onPress={onPress}
     >
-      {iconName && <Ionicons name={iconName} size={18} color="white" style={{ marginRight: 8 }} />}
+      {iconName && <Ionicons name={iconName} size={18} color={iconColor} style={{ marginRight: title ? 8 : 0 }} />}
       <Text style={styles.text}>{title}</Text>
     </Pressable>
   );
@@ -38,3 +38,9 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
+
+Button.defaultProps = {
+  iconColor: 'white',
+}
+
+export default Button;
