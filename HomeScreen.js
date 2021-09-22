@@ -6,8 +6,9 @@ import CustomButton from './Button';
 
 export default function HomeScreen() {
   const [ui, setUI] = useState('ui/ready');
-  const [name, setName] = useState(null);
+  const [name, setName] = useState('');
   const [location, setLocation] = useState(null);
+  const [inputError, setInputError] = useState(false);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
 
   const handleGetLocation = async function () {
@@ -16,7 +17,7 @@ export default function HomeScreen() {
       'ui/location-loading' :
       'ui/location-denied');
 
-    await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Lowest })
+    await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Lowest })
       .then(location => {
         setLocation(location);
         setUI('ui/location-granted');
@@ -24,16 +25,19 @@ export default function HomeScreen() {
       .catch(_ => setUI('ui/location-error'));
   }
 
-  const toggleSaveModal = () =>
+  const toggleSaveModal = () => {
     setSaveModalVisible(!saveModalVisible);
+  }
 
   const handleSaveLocation = async () => {
     await saveLocation({ ...location, name: name });
     toggleSaveModal();
+    setName('')
   }
 
   const handleCancelSaveLocation = () => {
-    setName(null);
+    setName('');
+    setInputError(false);
     toggleSaveModal();
   }
 
@@ -52,7 +56,7 @@ export default function HomeScreen() {
       <View style={styles.columnContainer}>
         <CustomButton iconName="location-outline" title="Get Location" onPress={async () => handleGetLocation()} />
         <Text style={{ textAlign: 'center', marginTop: 12, color: 'red' }}>
-          Location is denied,  please allow location access. Go to 'Settings' => 'Save GPS Locations' => 'Location' => Allow.
+          Location is denied,  please allow location access. Go to 'Settings' {'=>'} 'Save GPS Locations' {'=>'} 'Location' {'=>'} Allow.
         </Text>
       </View>
     );
@@ -136,13 +140,22 @@ export default function HomeScreen() {
                 <Text style={styles.modalHeaderText}>Give It a Name!</Text>
               </View>
               <View style={styles.modalBody}>
-                <TextInput
-                  style={styles.modalInput}
-                  placeholder="Set a memorable name"
-                  onChangeText={setName}
-                  value={name}
-                  autoFocus={true}
-                />
+                <View style={{ marginBottom: 24 }}>
+                  <TextInput
+                    style={[{
+                      borderWidth: inputError ? 1 : 0,
+                      borderColor: 'red',
+                      backgroundColor: inputError ? "lightpink" : '#f2f2f2',
+                    },
+                    styles.modalInput
+                    ]}
+                    placeholder="Set a memorable name"
+                    onChangeText={setName}
+                    value={name}
+                    autoFocus={true}
+                  />
+                  {inputError && <Text style={{ color: 'red' }}>Name can't be empty.</Text>}
+                </View>
                 <View style={styles.modalButtons}>
                   <CustomButton
                     title="Cancel"
@@ -282,7 +295,6 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: 'white',
-    alignItems: 'center',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     width: '100%',
@@ -301,8 +313,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   modalInput: {
-    marginBottom: 24,
-    backgroundColor: '#f2f2f2',
+    marginBottom: 8,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 18,

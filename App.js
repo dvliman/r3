@@ -2,13 +2,13 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import MoreScreen from './MoreScreen';
 import HomeScreen from './HomeScreen';
 import { Ionicons } from '@expo/vector-icons';
-import { Button } from 'react-native';
 import * as Sentry from 'sentry-expo';
+import CustomButton from './Button';
 import SavedLocationsScreen from './SavedLocationsScreen';
-
 
 function bottomIcon(route, focused) {
   if (route.name === 'Home') {
@@ -18,12 +18,12 @@ function bottomIcon(route, focused) {
   }
 }
 
-const BottomTab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
-function TabNavigator() {
+function HomeTabs() {
   const primaryColor = 'mediumblue';
   return (
-    <BottomTab.Navigator
+    <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
           return <Ionicons name={bottomIcon(route, focused)} size={24} color={primaryColor} />;
@@ -36,22 +36,34 @@ function TabNavigator() {
         },
         tabBarActiveTintColor: primaryColor,
         tabBarInactiveTintColor: 'gray',
+        // headerShown: false,
       })}
     >
-      <BottomTab.Screen
+      <Tab.Screen
         name="Home"
         component={HomeScreen}
-        options={({route, navigation}) => ({
+        options={({ route, navigation }) => ({
           headerRight: () => (
             // TODO: change this to an icon that have a little indicator there is something new
-            <Button
-              onPress={() => navigation.navigate('SavedLocations')}
-              title="Saved Locations"
+            <CustomButton
+              onPress={() => navigation.navigate('Saved Locations')}
+              iconName="bookmark"
+              iconColor="mediumblue"
+              customStyles={{
+                paddingHorizontal: 8,
+                paddingVertical: 8,
+                backgroundColor: 'white',
+                marginRight: 16,
+              }}
             />
           ),
-        })}/>
-      <BottomTab.Screen name="More" component={MoreScreen} />
-    </BottomTab.Navigator>
+        })}
+      />
+      <Tab.Screen
+        name="More"
+        component={MoreScreen}
+      />
+    </Tab.Navigator>
   );
 }
 
@@ -61,16 +73,27 @@ Sentry.init({
   debug: true,
 });
 
-export default function App() {
-  const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator();
 
+export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Tab" component={TabNavigator} />
-        <Stack.Screen name="SavedLocations" component={SavedLocationsScreen}/>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen
+            name="HomeTabs"
+            component={HomeTabs}
+          />
+          <Stack.Screen
+            name="Saved Locations"
+            component={SavedLocationsScreen}
+            options={{
+              headerShown: true,
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   )
 }
 
