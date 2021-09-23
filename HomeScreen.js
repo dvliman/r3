@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
 import * as Location from 'expo-location';
-import { View, StyleSheet, ActivityIndicator, Text, Modal, TextInput, KeyboardAvoidingView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  Text,
+  Modal,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView
+} from 'react-native';
 import CustomButton from './Button';
+import { saveLocation } from './Utils';
 
 export default function HomeScreen() {
   const [ui, setUI] = useState('ui/ready');
   const [name, setName] = useState('');
-  const [location, setLocation] = useState(null);
+  const [position, setPosition] = useState(null);
+  const [address, setAddress] = useState(null);
   const [inputError, setInputError] = useState(false);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
 
@@ -17,12 +28,17 @@ export default function HomeScreen() {
       'ui/location-loading' :
       'ui/location-denied');
 
-    await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Lowest })
-      .then(location => {
-        setLocation(location);
-        setUI('ui/location-granted');
-      })
-      .catch(_ => setUI('ui/location-error'));
+   const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Lowest });
+
+   const addresses = await Location.reverseGeocodeAsync(position.coords);
+
+   setPosition(position);
+   setAddress(addresses[0]);
+   setUI('ui/location-granted');
+      // .then()
+      // .then(setLocation)
+      // .then(_ => setUI('ui/location-granted'))
+      // .catch(_ => setUI('ui/location-error'));
   }
 
   const toggleSaveModal = () => {
@@ -30,9 +46,17 @@ export default function HomeScreen() {
   }
 
   const handleSaveLocation = async () => {
-    await saveLocation({ ...location, name: name });
+    await saveLocation({position: position, name: name, address: address});
     toggleSaveModal();
     setName('')
+  }
+
+  const handleResetLocation = () => {
+    setUI('ui/ready');
+    setName('');
+    setPosition(null);
+    setAddress(null);
+    setInputError(false);
   }
 
   const handleCancelSaveLocation = () => {
@@ -84,21 +108,22 @@ export default function HomeScreen() {
     );
   }
 
-  if (ui === 'ui/location-granted' && location != null) {
-    // TODO: after save, show some indication
-    // either have [list of saved locations] after clicking the header icon
-    // or just have the list at the bottom of this get location button
-    // (user can see the new named location)
-
+  if (ui === 'ui/location-granted') {
+    // TODO: temporarily changing to ScrollView because I test with iphone 8
+    // that has big circle button to put app in background so I can restart the app
+    // iphone 8 is small screen so the screen is chopped off in the middle - how to handle this case?
+    // also added a reset button that should "clear" current input i.e user don't want to use this geolocation
+    //
+    // had to remove this when switching to scrollview { justifyContent: 'flex-start' }
     return (
-      <View style={[styles.columnContainer, { justifyContent: 'flex-start' }]}>
+      <ScrollView style={[styles.columnContainer]}>
         <View style={styles.rowContainer}>
           <View style={styles.labelContainer}>
             <Text style={styles.textLabel}>Latitude (LAT)</Text>
           </View>
           <View style={styles.coordsContainer}>
-            <Text style={styles.textCoords}>{location.coords.latitude.toFixed(6)}</Text>
-            <Text style={styles.textDMS}>{convertDMSLat(location.coords.latitude)}</Text>
+            <Text style={styles.textCoords}>{position.coords.latitude.toFixed(6)}</Text>
+            <Text style={styles.textDMS}>{convertDMSLat(position.coords.latitude)}</Text>
           </View>
         </View>
         <View style={styles.rowContainer}>
@@ -106,8 +131,8 @@ export default function HomeScreen() {
             <Text style={styles.textLabel}>Longitude (LONG)</Text>
           </View>
           <View style={styles.coordsContainer}>
-            <Text style={styles.textCoords}>{location.coords.longitude.toFixed(6)}</Text>
-            <Text style={styles.textDMS}>{convertDMSLong(location.coords.longitude)}</Text>
+            <Text style={styles.textCoords}>{position.coords.longitude.toFixed(6)}</Text>
+            <Text style={styles.textDMS}>{convertDMSLong(position.coords.longitude)}</Text>
           </View>
         </View>
         <View style={styles.splitContainer}>
@@ -115,16 +140,28 @@ export default function HomeScreen() {
             <View style={styles.labelContainer}>
               <Text style={styles.textLabel}>Accuracy</Text>
             </View>
-            <Text style={[styles.textCoords, { fontSize: 36, paddingVertical: 8 }]}>{location.coords.accuracy.toFixed(1)} m</Text>
+            <Text style={[styles.textCoords, { fontSize: 36, paddingVertical: 8 }]}>{position.coords.accuracy.toFixed(1)} m</Text>
           </View>
           <View style={[styles.metersContainer, { marginLeft: 8 }]}>
             <View style={styles.labelContainer}>
               <Text style={styles.textLabel}>Altitute</Text>
             </View>
-            <Text style={[styles.textCoords, { fontSize: 36, paddingVertical: 8 }]}>{location.coords.altitude.toFixed(1)} m</Text>
+            <Text style={[styles.textCoords, { fontSize: 36, paddingVertical: 8 }]}>{position.coords.altitude.toFixed(1)} m</Text>
+          </View>
+        </View>
+        <View style={styles.rowContainer}>
+          <View style={styles.labelContainer}>
+            <Text style={styles.textLabel}>Address</Text>
+          </View>
+          {/* note: I was thinking to separate the (street name) from (city, region, postalCode)
+              so it looks a bit more 'aligned' but please do whatever make sense */}
+          <View style={styles.coordsContainer}>
+            <Text style={styles.textAddress}>{address.name}</Text>
+            <Text style={styles.textAddress}>{address.city + ", " + address.region + ", " + address.postalCode}</Text>
           </View>
         </View>
         <CustomButton iconName="bookmark-outline" title="Save Location" onPress={toggleSaveModal} />
+        <CustomButton iconName="bookmark-outline" title="Reset" onPress={handleResetLocation} />
 
         <Modal
           animationType="slide"
@@ -178,7 +215,7 @@ export default function HomeScreen() {
             </View>
           </KeyboardAvoidingView>
         </Modal>
-      </View>
+      </ScrollView>
     )
   }
 
@@ -213,21 +250,14 @@ function convertDMSLong(lng) {
   return longitude + " " + longitudeCardinal;
 }
 
-export async function getLocations() {
-  const jsonValue = await AsyncStorage.getItem('@locations') || '[]';
-  return JSON.parse(jsonValue).sort((a, b) => a['timestamp'] < b['timestamp']);
-}
 
-async function saveLocation(location) {
-  const locations = await getLocations();
-  await AsyncStorage.setItem('@locations', JSON.stringify([...locations, location]));
-}
 
 const styles = StyleSheet.create({
   columnContainer: {
     flex: 1,
     alignContent: 'center',
-    justifyContent: 'center',
+    // TODO: because of the ScrollView above
+    // justifyContent: 'center',
     padding: 16,
     backgroundColor: 'aliceblue',
   },
@@ -270,6 +300,13 @@ const styles = StyleSheet.create({
     fontWeight: "300",
     textAlign: 'center',
     marginBottom: 2
+  },
+  textAddress: {
+    fontSize: 20,
+    color: 'mediumblue',
+    fontWeight: "400",
+    textAlign: 'center',
+    // marginBottom: 2
   },
   textDMS: {
     color: 'mediumblue',

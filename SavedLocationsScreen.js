@@ -1,48 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, StyleSheet, Text, Alert, Share } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getLocations } from './HomeScreen';
+import { getLocations, removeLocationByTimestamp } from './Utils';
 import CustomButton from './Button';
 
 export default function SavedLocationsScreen() {
-  const [locations, setLocations] = useState([]);
+  const [ locations, setLocations ] = useState([]);
 
   useEffect(() => {
-    getLocations().then(setLocations);
+    getLocations()
+      .then(setLocations);
   }, []);
 
-  const EmptyListMessage = ({ item }) => {
+  // TODO: polish this look
+  const EmptyListMessage = () => {
     return (
       <Text>
-        No Data Found
+        No Saved Location
       </Text>
     );
   };
 
-  const deleteConfirmation = () => {
+  const deleteConfirmation = (item) => {
     Alert.alert(
-      "Delete Location",
-      "Are you sure you want to delete this location?",
+      'Delete Location',
+      'Are you sure you want to delete this location?',
       [
         {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
+          text: 'Cancel',
+          style: 'cancel'
         },
-        { text: "Yes", onPress: () => console.log("Yes Pressed") }
+        {
+          text: 'Yes',
+          onPress: () => {
+            removeLocationByTimestamp(item.position.timestamp)
+              .then(getLocations)
+              .then(setLocations);
+          }
+        }
       ]
     );
-  }
+  };
 
   const copyConfirmation = () => {
     Alert.alert(
-      "Location copied to clipboard",
-      "",
+      'Location copied to clipboard',
+      '',
       [
-        { text: "Ok", onPress: () => console.log("Ok Pressed") }
+        { text: 'Ok', onPress: () => console.log('Ok Pressed') }
       ]
     );
-  }
+  };
 
   const onShare = async (title, lat, long) => {
     try {
@@ -65,7 +73,7 @@ export default function SavedLocationsScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'aliceblue' }} edges={['right', 'bottom', 'left']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'aliceblue' }} edges={[ 'right', 'bottom', 'left' ]}>
       <FlatList
         style={styles.container}
         data={locations}
@@ -77,11 +85,11 @@ export default function SavedLocationsScreen() {
             <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row' }}>
               <View style={styles.coordsContainer}>
                 <Text style={styles.label}>LAT</Text>
-                <Text style={styles.coords}>{item.coords.latitude.toFixed(6)}</Text>
+                <Text style={styles.coords}>{item.position.coords.latitude.toFixed(6)}</Text>
               </View>
               <View style={styles.coordsContainer}>
                 <Text style={styles.label}>LONG</Text>
-                <Text style={styles.coords}>{item.coords.longitude.toFixed(6)}</Text>
+                <Text style={styles.coords}>{item.position.coords.longitude.toFixed(6)}</Text>
               </View>
             </View>
             <View
@@ -116,7 +124,7 @@ export default function SavedLocationsScreen() {
                 />
               </View>
               <CustomButton
-                onPress={deleteConfirmation}
+                onPress={() => deleteConfirmation(item) }
                 iconName="trash"
                 iconColor="red"
                 customStyles={{
@@ -128,7 +136,7 @@ export default function SavedLocationsScreen() {
             </View>
           </View>
         )}
-        keyExtractor={(item, index) => 'key' + index}
+        keyExtractor={(item, _) => item.position.timestamp}
         ListEmptyComponent={EmptyListMessage}
       />
     </SafeAreaView>
