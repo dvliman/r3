@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, StyleSheet, Text, Alert, Share } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getLocations, removeLocationByTimestamp } from './Utils';
+import { getLocations, removeLocationByTimestamp, formatLocationAsText } from './Utils';
 import CustomButton from './Button';
 
 export default function SavedLocationsScreen() {
@@ -21,7 +22,10 @@ export default function SavedLocationsScreen() {
     );
   };
 
-  const deleteConfirmation = (item) => {
+  const onShare = (item) =>
+    Share.share({message: formatLocationAsText(item)});
+
+  const onDelete = (item) =>
     Alert.alert(
       'Delete Location',
       'Are you sure you want to delete this location?',
@@ -40,37 +44,15 @@ export default function SavedLocationsScreen() {
         }
       ]
     );
-  };
 
-  const copyConfirmation = () => {
+  const onCopy = (item) =>
     Alert.alert(
       'Location copied to clipboard',
       '',
       [
-        { text: 'Ok', onPress: () => console.log('Ok Pressed') }
+        { text: 'Ok', onPress: () => Clipboard.setString(formatLocationAsText(item)) }
       ]
     );
-  };
-
-  const onShare = async (title, lat, long) => {
-    try {
-      const result = await Share.share({
-        message:
-          `${title}`,
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'aliceblue' }} edges={[ 'right', 'bottom', 'left' ]}>
@@ -103,7 +85,7 @@ export default function SavedLocationsScreen() {
             >
               <View style={{ flexDirection: 'row' }}>
                 <CustomButton
-                  onPress={() => onShare(item.name)}
+                  onPress={() => onShare(item)}
                   iconName="share-outline"
                   iconColor="black"
                   customStyles={{
@@ -113,7 +95,7 @@ export default function SavedLocationsScreen() {
                   }}
                 />
                 <CustomButton
-                  onPress={copyConfirmation}
+                  onPress={() =>onCopy(item) }
                   iconName="copy-outline"
                   iconColor="black"
                   customStyles={{
@@ -124,7 +106,7 @@ export default function SavedLocationsScreen() {
                 />
               </View>
               <CustomButton
-                onPress={() => deleteConfirmation(item) }
+                onPress={() => onDelete(item) }
                 iconName="trash"
                 iconColor="red"
                 customStyles={{
@@ -136,7 +118,7 @@ export default function SavedLocationsScreen() {
             </View>
           </View>
         )}
-        keyExtractor={(item, _) => item.position.timestamp}
+        keyExtractor={(item, _) => item.position.timestamp.toString() }
         ListEmptyComponent={EmptyListMessage}
       />
     </SafeAreaView>

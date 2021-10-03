@@ -35,6 +35,7 @@ export default function HomeScreen() {
    setPosition(position);
    setAddress(addresses[0]);
    setUI('ui/location-granted');
+   // TODO: proper error handling
       // .then()
       // .then(setLocation)
       // .then(_ => setUI('ui/location-granted'))
@@ -47,8 +48,7 @@ export default function HomeScreen() {
 
   const handleSaveLocation = async () => {
     await saveLocation({position: position, name: name, address: address});
-    toggleSaveModal();
-    setName('')
+    handleResetLocation();
   }
 
   const handleResetLocation = () => {

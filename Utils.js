@@ -16,3 +16,15 @@ export async function removeLocationByTimestamp(timestamp) {
   const filtered = locations.filter((location) => location.position.timestamp !== timestamp);
   await AsyncStorage.setItem('@locations', JSON.stringify(filtered));
 }
+
+export function formatLocationAsText(item) {
+  return `
+Latitude: ${item.position.coords.latitude}
+Longitude: ${item.position.coords.longitude}
+Address: ${item.address.name}, ${item.address.city}, ${item.address.region}, ${item.address.postalCode}
+Date: ${(new Date()).toLocaleDateString()}
+Name: ${item.name}
+Google Maps: https://maps.google.com/maps?q=${item.position.coords.latitude},${item.position.coords.longitude}
+Apple Maps: https://maps.apple.com/?ll=${item.position.coords.latitude},${item.position.coords.longitude}`;
+}
+
