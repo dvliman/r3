@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Sentry from 'sentry-expo';
 import CustomButton from './Button';
 import SavedLocationsScreen from './SavedLocationsScreen';
+import * as Analytics from './Analytics';
 
 function bottomIcon(route, focused) {
   if (route.name === 'Home') {
@@ -18,6 +19,7 @@ function bottomIcon(route, focused) {
   }
 }
 
+const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function HomeTabs() {
@@ -36,7 +38,6 @@ function HomeTabs() {
         },
         tabBarActiveTintColor: primaryColor,
         tabBarInactiveTintColor: 'gray',
-        // headerShown: false,
       })}
     >
       <Tab.Screen
@@ -73,9 +74,8 @@ Sentry.init({
   debug: true,
 });
 
-const Stack = createNativeStackNavigator();
-
 export default function App() {
+  Analytics.logEvent('AppStartup').then(_ => _);
   return (
     <SafeAreaProvider>
       <NavigationContainer>

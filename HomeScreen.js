@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
 import {
   View,
@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import CustomButton from './Button';
 import { saveLocation } from './Utils';
+import * as Analytics from './Analytics';
+import { logEventWithProperties } from './Analytics';
 
 export default function HomeScreen() {
   const [ui, setUI] = useState('ui/ready');
@@ -22,24 +24,36 @@ export default function HomeScreen() {
   const [inputError, setInputError] = useState(false);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
 
+  useEffect(() => {
+    async function logEvent() {
+      await Analytics.logEvent('HomeScreen');
+    }
+    logEvent().then(_ => _);
+  }, []);
+
   const handleGetLocation = async function () {
     const { status } = await Location.requestForegroundPermissionsAsync();
     setUI(status === 'granted' ?
       'ui/location-loading' :
       'ui/location-denied');
 
-   const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Lowest });
+    const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Lowest });
 
-   const addresses = await Location.reverseGeocodeAsync(position.coords);
+    const addresses = await Location.reverseGeocodeAsync(position.coords);
 
-   setPosition(position);
-   setAddress(addresses[0]);
-   setUI('ui/location-granted');
+    setPosition(position);
+    setAddress(addresses[0]);
+    setUI('ui/location-granted');
    // TODO: proper error handling
       // .then()
       // .then(setLocation)
       // .then(_ => setUI('ui/location-granted'))
       // .catch(_ => setUI('ui/location-error'));
+    await Analytics.logEventWithProperties('GetLocation', {
+      status: status,
+      position: position,
+      address: addresses[0]
+    });
   }
 
   const toggleSaveModal = () => {
@@ -47,11 +61,16 @@ export default function HomeScreen() {
   }
 
   const handleSaveLocation = async () => {
+    await Analytics.logEventWithProperties('SaveLocation', {
+      position: position,
+      address: address,
+    });
     await saveLocation({position: position, name: name, address: address});
-    handleResetLocation();
+    handleResetLocation().then(_ => _);
   }
 
-  const handleResetLocation = () => {
+  const handleResetLocation = async () => {
+    await Analytics.logEvent('ResetLocation');
     setUI('ui/ready');
     setName('');
     setPosition(null);
@@ -59,7 +78,8 @@ export default function HomeScreen() {
     setInputError(false);
   }
 
-  const handleCancelSaveLocation = () => {
+  const handleCancelSaveLocation = async () => {
+    await Analytics.logEvent('CancelSaveLocation');
     setName('');
     setInputError(false);
     toggleSaveModal();
