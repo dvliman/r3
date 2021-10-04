@@ -4,13 +4,20 @@ import * as Clipboard from 'expo-clipboard';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getLocations, removeLocationByTimestamp, formatLocationAsText } from './Utils';
 import CustomButton from './Button';
+import * as Analytics from './Analytics';
 
 export default function SavedLocationsScreen() {
   const [ locations, setLocations ] = useState([]);
 
   useEffect(() => {
-    getLocations()
-      .then(setLocations);
+    async function logEvent() {
+      await Analytics.logEvent('SavedLocationsScreen');
+    }
+    logEvent().then(_ => _);
+  }, []);
+
+  useEffect(() => {
+    getLocations().then(setLocations);
   }, []);
 
   // TODO: polish this look
@@ -22,8 +29,10 @@ export default function SavedLocationsScreen() {
     );
   };
 
-  const onShare = (item) =>
-    Share.share({message: formatLocationAsText(item)});
+  const onShare = async (item) => {
+    await Analytics.logEventWithProperties('ShareLocation', item);
+    await Share.share({message: formatLocationAsText(item)});
+  }
 
   const onDelete = (item) =>
     Alert.alert(
@@ -36,8 +45,9 @@ export default function SavedLocationsScreen() {
         },
         {
           text: 'Yes',
-          onPress: () => {
-            removeLocationByTimestamp(item.position.timestamp)
+          onPress: async () => {
+            await Analytics.logEventWithProperties('DeleteLocation', item);
+            await removeLocationByTimestamp(item.position.timestamp)
               .then(getLocations)
               .then(setLocations);
           }
@@ -50,7 +60,12 @@ export default function SavedLocationsScreen() {
       'Location copied to clipboard',
       '',
       [
-        { text: 'Ok', onPress: () => Clipboard.setString(formatLocationAsText(item)) }
+        { text: 'Ok',
+          onPress: async () => {
+            await Analytics.logEventWithProperties('CopyLocation', item);
+            Clipboard.setString(formatLocationAsText(item))
+          }
+        }
       ]
     );
 
