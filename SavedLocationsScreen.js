@@ -89,6 +89,17 @@ export default function SavedLocationsScreen() {
                 <Text style={styles.coords}>{item.position.coords.longitude.toFixed(6)}</Text>
               </View>
             </View>
+            <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row' }}>
+              <View style={styles.coordsContainer}>
+                <Text style={styles.label}>Address</Text>
+              </View>
+              {/* note: I was thinking to separate the (street name) from (city, region, postalCode)
+              so it looks a bit more 'aligned' but please do whatever make sense */}
+              <View style={styles.coordsContainer}>
+                <Text style={styles.label}>{item.address.name}</Text>
+                <Text style={styles.label}>{item.address.city + ", " + item.address.region + ", " + item.address.postalCode}</Text>
+              </View>
+            </View>
             <View
               style={{
                 flexDirection: 'row',

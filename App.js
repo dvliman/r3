@@ -22,10 +22,24 @@ function bottomIcon(route, focused) {
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+function getActiveRouteName(navigationState) {
+  if (!navigationState) return null;
+  const route = navigationState.routes[navigationState.index];
+  if (route.routes) return getActiveRouteName(route);
+  return route.routeName;
+}
+
 function HomeTabs() {
   const primaryColor = 'mediumblue';
   return (
     <Tab.Navigator
+      onNavigationStateChange={(prevState, currentState) => {
+        const currentScreen = getActiveRouteName(currentState);
+        const prevScreen = getActiveRouteName(prevState);
+        if (prevScreen !== currentScreen) {
+          Analytics.setCurrentScreen(currentScreen);
+        }
+      }}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
           return <Ionicons name={bottomIcon(route, focused)} size={24} color={primaryColor} />;

@@ -14,7 +14,6 @@ import {
 import CustomButton from './Button';
 import { saveLocation } from './Utils';
 import * as Analytics from './Analytics';
-import { logEventWithProperties } from './Analytics';
 
 export default function HomeScreen() {
   const [ui, setUI] = useState('ui/ready');
@@ -37,18 +36,16 @@ export default function HomeScreen() {
       'ui/location-loading' :
       'ui/location-denied');
 
-    const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Lowest });
+    // TODO: proper error handling
+    const position = await Location.getCurrentPositionAsync(
+      { accuracy: Location.Accuracy.Lowest });
 
     const addresses = await Location.reverseGeocodeAsync(position.coords);
 
     setPosition(position);
     setAddress(addresses[0]);
     setUI('ui/location-granted');
-   // TODO: proper error handling
-      // .then()
-      // .then(setLocation)
-      // .then(_ => setUI('ui/location-granted'))
-      // .catch(_ => setUI('ui/location-error'));
+
     await Analytics.logEventWithProperties('GetLocation', {
       status: status,
       position: position,

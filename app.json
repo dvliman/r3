@@ -18,16 +18,27 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.dvliman.r3"
+      "bundleIdentifier": "com.dvliman.r3",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.dvliman.r3",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "config": {
+        "firebase": {
+          "appId": "1:664301208583:web:e7f77bca59f2efe39856a2",
+          "apiKey": "AIzaSyDtEIUFh7uHZLLptPg1QEn3jGWYc144r0k",
+          "projectId": "r3r3-9cda9",
+          "measurementId": "G-64P2Q9WD45"
+        }
+      }
     },
     "plugins": [
       "sentry-expo"
