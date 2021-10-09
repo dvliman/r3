@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import * as Sentry from 'sentry-expo';
 import * as Location from 'expo-location';
 import {
   View,
@@ -32,19 +33,30 @@ export default function HomeScreen() {
 
   const handleGetLocation = async function () {
     const { status } = await Location.requestForegroundPermissionsAsync();
-    setUI(status === 'granted' ?
-      'ui/location-loading' :
-      'ui/location-denied');
+    if (status !== 'granted') {
+      setUI('ui/location-denied');
+      return;
+    }
 
-    // TODO: proper error handling
+    setUI('ui/location-loading');
+
     const position = await Location.getCurrentPositionAsync(
-      { accuracy: Location.Accuracy.Lowest });
+      { accuracy: Location.Accuracy.Lowest }).catch((error) => {
+        setUI('ui/location-error');
+        Sentry.Native.captureException(error);
+    });
 
-    const addresses = await Location.reverseGeocodeAsync(position.coords);
+    const addresses = await Location.reverseGeocodeAsync(position.coords)
+      .catch((error) => {
+        setUI('ui/location-error');
+        Sentry.Native.captureException(error);
+      });
 
-    setPosition(position);
-    setAddress(addresses[0]);
-    setUI('ui/location-granted');
+    if (ui !== 'ui/location-error') {
+      setPosition(position);
+      setAddress(addresses[0]);
+      setUI('ui/location-granted');
+    }
 
     await Analytics.logEventWithProperties('GetLocation', {
       status: status,
