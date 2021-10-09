@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import MoreScreen from './MoreScreen';
+import HelpScreen from './HelpScreen';
 import HomeScreen from './HomeScreen';
 import { Ionicons } from '@expo/vector-icons';
 import * as Sentry from 'sentry-expo';
@@ -14,7 +14,7 @@ import * as Analytics from './Analytics';
 function bottomIcon(route, focused) {
   if (route.name === 'Home') {
     return `ios-home${focused ? '' : '-outline'}`;
-  } else if (route.name === 'More') {
+  } else if (route.name === 'Help') {
     return `ios-information-circle${focused ? '' : '-outline'}`;
   }
 }
@@ -75,8 +75,8 @@ function HomeTabs() {
         })}
       />
       <Tab.Screen
-        name="More"
-        component={MoreScreen}
+        name="Help"
+        component={HelpScreen}
       />
     </Tab.Navigator>
   );
