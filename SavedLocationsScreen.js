@@ -7,7 +7,7 @@ import CustomButton from './Button';
 import * as Analytics from './Analytics';
 
 export default function SavedLocationsScreen() {
-  const [ locations, setLocations ] = useState([]);
+  const [locations, setLocations] = useState([]);
 
   useEffect(() => {
     async function logEvent() {
@@ -31,7 +31,7 @@ export default function SavedLocationsScreen() {
 
   const onShare = async (item) => {
     await Analytics.logEventWithProperties('ShareLocation', item);
-    await Share.share({message: formatLocationAsText(item)});
+    await Share.share({ message: formatLocationAsText(item) });
   }
 
   const onDelete = (item) =>
@@ -60,7 +60,8 @@ export default function SavedLocationsScreen() {
       'Location copied to clipboard',
       '',
       [
-        { text: 'Ok',
+        {
+          text: 'Ok',
           onPress: async () => {
             await Analytics.logEventWithProperties('CopyLocation', item);
             Clipboard.setString(formatLocationAsText(item))
@@ -70,7 +71,7 @@ export default function SavedLocationsScreen() {
     );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'aliceblue' }} edges={[ 'right', 'bottom', 'left' ]}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'aliceblue' }} edges={['right', 'bottom', 'left']}>
       <FlatList
         style={styles.container}
         data={locations}
@@ -121,7 +122,7 @@ export default function SavedLocationsScreen() {
                   }}
                 />
                 <CustomButton
-                  onPress={() =>onCopy(item) }
+                  onPress={() => onCopy(item)}
                   iconName="copy-outline"
                   iconColor="black"
                   customStyles={{
@@ -132,7 +133,7 @@ export default function SavedLocationsScreen() {
                 />
               </View>
               <CustomButton
-                onPress={() => onDelete(item) }
+                onPress={() => onDelete(item)}
                 iconName="trash"
                 iconColor="red"
                 customStyles={{
@@ -144,7 +145,7 @@ export default function SavedLocationsScreen() {
             </View>
           </View>
         )}
-        keyExtractor={(item, _) => item.position.timestamp.toString() }
+        keyExtractor={(item, _) => item.position.timestamp.toString()}
         ListEmptyComponent={EmptyListMessage}
       />
     </SafeAreaView>
@@ -158,19 +159,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   item: {
-    backgroundColor: 'white',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'lightgray',
+    backgroundColor: '#f6f6f6',
+    borderRadius: 8,
     marginVertical: 8,
   },
   itemName: {
     fontSize: 24,
-    color: 'mediumblue',
+    color: 'black',
     fontWeight: '500',
   },
   nameContainer: {
-    borderBottomColor: 'lightgray',
+    borderBottomColor: 'white',
     borderBottomWidth: 1,
     backgroundColor: 'white',
     borderTopLeftRadius: 16,
