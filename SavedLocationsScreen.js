@@ -71,7 +71,7 @@ export default function SavedLocationsScreen() {
     );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'aliceblue' }} edges={['right', 'bottom', 'left']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['right', 'bottom', 'left']}>
       <FlatList
         style={styles.container}
         data={locations}
