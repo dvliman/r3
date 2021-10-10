@@ -30,7 +30,7 @@ function getActiveRouteName(navigationState) {
 }
 
 function HomeTabs() {
-  const primaryColor = 'mediumblue';
+  const primaryColor = 'black';
   return (
     <Tab.Navigator
       onNavigationStateChange={(prevState, currentState) => {
@@ -63,7 +63,7 @@ function HomeTabs() {
             <CustomButton
               onPress={() => navigation.navigate('Saved Locations')}
               iconName="bookmark"
-              iconColor="mediumblue"
+              iconColor="black"
               customStyles={{
                 paddingHorizontal: 8,
                 paddingVertical: 8,

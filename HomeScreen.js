@@ -44,7 +44,7 @@ export default function HomeScreen() {
       { accuracy: Location.Accuracy.Lowest }).catch((error) => {
         setUI('ui/location-error');
         Sentry.Native.captureException(error);
-    });
+      });
 
     const addresses = await Location.reverseGeocodeAsync(position.coords)
       .catch((error) => {
@@ -74,7 +74,7 @@ export default function HomeScreen() {
       position: position,
       address: address,
     });
-    await saveLocation({position: position, name: name, address: address});
+    await saveLocation({ position: position, name: name, address: address });
     handleResetLocation().then(_ => _);
   }
 
@@ -118,7 +118,7 @@ export default function HomeScreen() {
   if (ui === 'ui/location-loading') {
     return (
       <View style={styles.columnContainer}>
-        <ActivityIndicator color="mediumblue" />
+        <ActivityIndicator color="black" />
         <Text style={{ textAlign: 'center', marginTop: 12 }}>
           Loading location...
         </Text>
@@ -189,8 +189,19 @@ export default function HomeScreen() {
             <Text style={styles.textAddress}>{address.city + ", " + address.region + ", " + address.postalCode}</Text>
           </View>
         </View>
-        <CustomButton iconName="bookmark-outline" title="Save Location" onPress={toggleSaveModal} />
-        <CustomButton iconName="bookmark-outline" title="Reset" onPress={handleResetLocation} />
+        <CustomButton iconName="bookmark-outline" title="Save Location" onPress={toggleSaveModal} customStyles={{ marginVertical: 12, borderWidth: 1 }} />
+        <CustomButton
+          title="Reset"
+          onPress={handleResetLocation}
+          customStyles={{
+            backgroundColor: 'white',
+            borderColor: 'black',
+            borderWidth: 1,
+          }}
+          customTextStyles={{
+            color: 'black'
+          }}
+        />
 
         <Modal
           animationType="slide"
@@ -229,7 +240,11 @@ export default function HomeScreen() {
                     customStyles={{
                       flex: 1,
                       marginRight: 12,
-                      backgroundColor: 'lightslategrey',
+                      backgroundColor: 'white',
+                      borderWidth: 1,
+                    }}
+                    customTextStyles={{
+                      color: 'black'
                     }}
                   />
                   <CustomButton
@@ -288,7 +303,7 @@ const styles = StyleSheet.create({
     // TODO: because of the ScrollView above
     // justifyContent: 'center',
     padding: 16,
-    backgroundColor: 'aliceblue',
+    backgroundColor: 'white',
   },
   contentContainer: {
     backgroundColor: 'white',
@@ -301,13 +316,11 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: 'column',
     marginBottom: 12,
-    backgroundColor: 'white',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'lightgray'
+    backgroundColor: '#f6f6f6',
+    borderRadius: 8,
   },
   labelContainer: {
-    borderBottomColor: 'lightgray',
+    borderBottomColor: '#ffffff',
     borderBottomWidth: 1,
     paddingVertical: 8
   },
@@ -325,20 +338,19 @@ const styles = StyleSheet.create({
   },
   textCoords: {
     fontSize: 56,
-    color: 'mediumblue',
+    color: 'black',
     fontWeight: "300",
     textAlign: 'center',
     marginBottom: 2
   },
   textAddress: {
     fontSize: 20,
-    color: 'mediumblue',
+    color: 'black',
     fontWeight: "400",
     textAlign: 'center',
-    // marginBottom: 2
   },
   textDMS: {
-    color: 'mediumblue',
+    color: 'black',
     fontSize: 18,
     textAlign: 'center',
   },
@@ -348,10 +360,8 @@ const styles = StyleSheet.create({
   },
   metersContainer: {
     flex: 1,
-    backgroundColor: 'white',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'lightgray'
+    backgroundColor: '#f6f6f6',
+    borderRadius: 8,
   },
   centeredView: {
     flex: 1,

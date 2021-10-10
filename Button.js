@@ -3,11 +3,11 @@ import { Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const Button = (props) => {
-  const { onPress, title, iconName, customStyles, iconColor } = props;
+  const { onPress, title, iconName, customStyles, iconColor, customTextStyles } = props;
   return (
     <Pressable
       style={({ pressed }) => [{
-        backgroundColor: pressed ? 'black' : 'mediumblue',
+        backgroundColor: pressed ? '#333333' : 'black',
       },
       styles.button,
         customStyles
@@ -15,7 +15,7 @@ const Button = (props) => {
       onPress={onPress}
     >
       {iconName && <Ionicons name={iconName} size={18} color={iconColor} style={{ marginRight: title ? 8 : 0 }} />}
-      <Text style={styles.text}>{title}</Text>
+      <Text style={[styles.text, customTextStyles]}>{title}</Text>
     </Pressable>
   );
 }
