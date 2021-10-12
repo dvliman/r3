@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Linking, Text, TouchableOpacity, View } from 'react-native';
 import * as Analytics from './Analytics';
+import CustomButton from './Button';
 
 export default function HelpScreen() {
   useEffect(() => {
@@ -16,26 +17,13 @@ export default function HelpScreen() {
         padding: 16,
       }}
     >
-      <Text style={{ textAlign: 'center' }}>
-        Thank you for helping us improve your
-        {'\n'}
-        app experience.
+      <Text style={{ fontSize: 24, lineHeight: 30, fontWeight: '400', marginBottom: 36 }}>
+        Thank you for helping us improve your app experience.
         {'\n'}
         {'\n'}
-        {'\n'}
-        We will do our best to respond within 24
-        {'\n'}
-        hours and keep you posted with any
-        {'\n'}
-        updates to your reported bug.
-        {'\n'}
-        {'\n'}
+        We will do our best to respond within 24 hours and keep you posted with any updates to your reported bug.
       </Text>
-      <TouchableOpacity onPress={() => Linking.openURL(`mailto:${email}`)}>
-        <Text style={{ fontSize: 14, textAlign: 'center', color: '#FF631B' }}>
-          limanoit@gmail.com
-        </Text>
-      </TouchableOpacity>
+      <CustomButton iconName="mail-outline" title="Contact us" onPress={() => Linking.openURL('mailto:limanoit@gmail.com')} />
     </View>
   );
 }

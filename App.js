@@ -44,15 +44,12 @@ function HomeTabs() {
         tabBarIcon: ({ focused }) => {
           return <Ionicons name={bottomIcon(route, focused)} size={24} color={primaryColor} />;
         },
-        tabBarStyle: {
-          height: 96,
-        },
-        tabBarItemStyle: {
-          padding: 10,
-        },
         tabBarActiveTintColor: primaryColor,
         tabBarInactiveTintColor: 'gray',
       })}
+      sceneContainerStyle={{
+        backgroundColor: 'white'
+      }}
     >
       <Tab.Screen
         name="Home"

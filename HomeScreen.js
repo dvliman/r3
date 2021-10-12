@@ -96,7 +96,7 @@ export default function HomeScreen() {
 
   if (ui === 'ui/ready') {
     return (
-      <View style={styles.columnContainer}>
+      <View style={styles.viewContainer}>
         <CustomButton iconName="location-outline" title="Get Location" onPress={async () => handleGetLocation()} />
       </View>
     );
@@ -106,7 +106,7 @@ export default function HomeScreen() {
     // TODO: screenshot and image to grant location
     // in settings, open settings button
     return (
-      <View style={styles.columnContainer}>
+      <View style={styles.viewContainer}>
         <CustomButton iconName="location-outline" title="Get Location" onPress={async () => handleGetLocation()} />
         <Text style={{ textAlign: 'center', marginTop: 12, color: 'red' }}>
           Location is denied,  please allow location access. Go to 'Settings' {'=>'} 'Save GPS Locations' {'=>'} 'Location' {'=>'} Allow.
@@ -117,7 +117,7 @@ export default function HomeScreen() {
 
   if (ui === 'ui/location-loading') {
     return (
-      <View style={styles.columnContainer}>
+      <View style={styles.viewContainer}>
         <ActivityIndicator color="black" />
         <Text style={{ textAlign: 'center', marginTop: 12 }}>
           Loading location...
@@ -128,7 +128,7 @@ export default function HomeScreen() {
 
   if (ui === 'ui/location-error') {
     return (
-      <View style={styles.columnContainer}>
+      <View style={styles.viewContainer}>
         <CustomButton iconName="location-outline" title="Get Location" onPress={async () => handleGetLocation()} />
         <Text style={{ textAlign: 'center', marginTop: 12, color: 'red' }}>
           Location error.
@@ -145,7 +145,7 @@ export default function HomeScreen() {
     //
     // had to remove this when switching to scrollview { justifyContent: 'flex-start' }
     return (
-      <ScrollView style={[styles.columnContainer]}>
+      <ScrollView contentContainerStyle={[styles.scrollViewContainer]}>
         <View style={styles.rowContainer}>
           <View style={styles.labelContainer}>
             <Text style={styles.textLabel}>Latitude (LAT)</Text>
@@ -297,13 +297,14 @@ function convertDMSLong(lng) {
 
 
 const styles = StyleSheet.create({
-  columnContainer: {
+  viewContainer: {
     flex: 1,
     alignContent: 'center',
-    // TODO: because of the ScrollView above
-    // justifyContent: 'center',
+    justifyContent: 'center',
     padding: 16,
-    backgroundColor: 'white',
+  },
+  scrollViewContainer: {
+    padding: 16,
   },
   contentContainer: {
     backgroundColor: 'white',

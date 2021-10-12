@@ -73,7 +73,7 @@ export default function SavedLocationsScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['right', 'bottom', 'left']}>
       <FlatList
-        style={styles.container}
+        contentContainerStyle={styles.container}
         data={locations}
         renderItem={({ item }) => (
           <View style={styles.item}>
@@ -93,12 +93,8 @@ export default function SavedLocationsScreen() {
             <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row' }}>
               <View style={styles.coordsContainer}>
                 <Text style={styles.label}>Address</Text>
-              </View>
-              {/* note: I was thinking to separate the (street name) from (city, region, postalCode)
-              so it looks a bit more 'aligned' but please do whatever make sense */}
-              <View style={styles.coordsContainer}>
-                <Text style={styles.label}>{item.address.name}</Text>
-                <Text style={styles.label}>{item.address.city + ", " + item.address.region + ", " + item.address.postalCode}</Text>
+                <Text style={styles.coords}>{item.address.name}</Text>
+                <Text style={styles.coords}>{item.address.city + ", " + item.address.region + ", " + item.address.postalCode}</Text>
               </View>
             </View>
             <View
@@ -106,7 +102,7 @@ export default function SavedLocationsScreen() {
                 flexDirection: 'row',
                 paddingHorizontal: 8,
                 borderTopWidth: 1,
-                borderTopColor: 'lightgray',
+                borderTopColor: 'white',
                 justifyContent: 'space-between'
               }}
             >
@@ -154,7 +150,6 @@ export default function SavedLocationsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     paddingVertical: 8,
     paddingHorizontal: 16,
   },
@@ -171,7 +166,7 @@ const styles = StyleSheet.create({
   nameContainer: {
     borderBottomColor: 'white',
     borderBottomWidth: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#f6f6f6',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     flexDirection: 'row',
