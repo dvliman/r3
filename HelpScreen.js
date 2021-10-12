@@ -11,8 +11,12 @@ export default function HelpScreen() {
   }, []);
 
   return (
-    <View>
-      <Text style={{textAlign: 'center'}}>
+    <View
+      style={{
+        padding: 16,
+      }}
+    >
+      <Text style={{ textAlign: 'center' }}>
         Thank you for helping us improve your
         {'\n'}
         app experience.
@@ -28,7 +32,7 @@ export default function HelpScreen() {
         {'\n'}
       </Text>
       <TouchableOpacity onPress={() => Linking.openURL(`mailto:${email}`)}>
-        <Text style={{fontSize: 14, textAlign: 'center', color: '#FF631B'}}>
+        <Text style={{ fontSize: 14, textAlign: 'center', color: '#FF631B' }}>
           limanoit@gmail.com
         </Text>
       </TouchableOpacity>
