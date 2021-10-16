@@ -31,6 +31,15 @@ export default function HomeScreen() {
     logEvent().then(_ => _);
   }, []);
 
+  const clearAllStates = () => {
+    setUI('ui/ready');
+    setName('');
+    setPosition(null);
+    setAddress(null);
+    setInputError(null);
+    setSaveModalVisible(false);
+  }
+
   const handleGetLocation = async function () {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
@@ -70,29 +79,22 @@ export default function HomeScreen() {
   }
 
   const handleSaveLocation = async () => {
-    toggleSaveModal();
     await Analytics.logEventWithProperties('SaveLocation', {
       position: position,
       address: address,
     });
     await saveLocation({ position: position, name: name, address: address });
-    handleResetLocation().then(_ => _);
+    clearAllStates();
   }
 
   const handleResetLocation = async () => {
     await Analytics.logEvent('ResetLocation');
-    setUI('ui/ready');
-    setName('');
-    setPosition(null);
-    setAddress(null);
-    setInputError(false);
+    clearAllStates();
   }
 
   const handleCancelSaveLocation = async () => {
-    toggleSaveModal();
     await Analytics.logEvent('CancelSaveLocation');
-    setName('');
-    setInputError(false);
+    clearAllStates();
   }
 
   if (ui === 'ui/ready') {
@@ -205,7 +207,7 @@ export default function HomeScreen() {
         />
 
         <Modal
-          animationType="slide"
+          animationType="none"
           transparent={true}
           visible={saveModalVisible}
         >
