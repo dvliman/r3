@@ -70,6 +70,7 @@ export default function HomeScreen() {
   }
 
   const handleSaveLocation = async () => {
+    toggleSaveModal();
     await Analytics.logEventWithProperties('SaveLocation', {
       position: position,
       address: address,
@@ -88,10 +89,10 @@ export default function HomeScreen() {
   }
 
   const handleCancelSaveLocation = async () => {
+    toggleSaveModal();
     await Analytics.logEvent('CancelSaveLocation');
     setName('');
     setInputError(false);
-    toggleSaveModal();
   }
 
   if (ui === 'ui/ready') {
@@ -264,7 +265,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <View style={styles.columnContainer}>
+    <View>
       <Text>Something went wrong.</Text>
     </View>
   );
@@ -293,8 +294,6 @@ function convertDMSLong(lng) {
 
   return longitude + " " + longitudeCardinal;
 }
-
-
 
 const styles = StyleSheet.create({
   viewContainer: {

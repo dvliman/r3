@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Linking, Text, TouchableOpacity, View } from 'react-native';
+import { Linking, Text, View } from 'react-native';
 import * as Analytics from './Analytics';
 import CustomButton from './Button';
 
@@ -18,12 +18,13 @@ export default function HelpScreen() {
       }}
     >
       <Text style={{ fontSize: 24, lineHeight: 30, fontWeight: '400', marginBottom: 36 }}>
+        If you have a feature request or want to report bug, please write us an email. We will
+        do our best to respond within 24 hours.
+        {'\n'}
+        {'\n'}
         Thank you for helping us improve your app experience.
-        {'\n'}
-        {'\n'}
-        We will do our best to respond within 24 hours and keep you posted with any updates to your reported bug.
       </Text>
-      <CustomButton iconName="mail-outline" title="Contact us" onPress={() => Linking.openURL('mailto:limanoit@gmail.com')} />
+      <CustomButton iconName="mail-outline" title="Send an email" onPress={() => Linking.openURL('mailto:limanoit@gmail.com')} />
     </View>
   );
 }
