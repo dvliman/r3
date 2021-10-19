@@ -18,11 +18,22 @@ export default function HelpScreen() {
       }}
     >
       <Text style={{ fontSize: 24, lineHeight: 30, fontWeight: '400', marginBottom: 36 }}>
-        If you have a feature request or want to report bug, please write us an email. We will
-        do our best to respond within 24 hours.
+        This is a beta app. I really appreciate your feedback!
         {'\n'}
         {'\n'}
-        Thank you for helping us improve your app experience.
+        {`\u2022 What features would you add?`}
+        {'\n'}
+        {'\n'}
+        {`\u2022 Which features were least useful?`}
+        {'\n'}
+        {'\n'}
+        {`\u2022 Why wouldn't you use this app again?`}
+        {'\n'}
+        {'\n'}
+        {`\u2022 Which functions didn't work as expected?`}
+        {'\n'}
+        {'\n'}
+        {`\u2022 Did the app help solve your problem/achieve your goal?`}
       </Text>
       <CustomButton iconName="mail-outline" title="Send an email" onPress={() => Linking.openURL('mailto:limanoit@gmail.com')} />
     </View>
