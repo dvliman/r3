@@ -87,6 +87,7 @@ export default function HomeScreen() {
       setInputError(true)
     } else {
       await saveLocation({ position: position, name: name, address: address });
+      setInputError(false);
       clearAllStates();
     }
   }
@@ -100,6 +101,7 @@ export default function HomeScreen() {
     setSaveModalVisible(false);
     await Analytics.logEvent('CancelSaveLocation');
     setName('');
+    setInputError(false);
   }
 
   if (ui === 'ui/ready') {
