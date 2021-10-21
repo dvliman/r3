@@ -83,8 +83,12 @@ export default function HomeScreen() {
       position: position,
       address: address,
     });
-    await saveLocation({ position: position, name: name, address: address });
-    clearAllStates();
+    if (name === '') {
+      setInputError(true)
+    } else {
+      await saveLocation({ position: position, name: name, address: address });
+      clearAllStates();
+    }
   }
 
   const handleResetLocation = async () => {
@@ -93,8 +97,9 @@ export default function HomeScreen() {
   }
 
   const handleCancelSaveLocation = async () => {
+    setSaveModalVisible(false);
     await Analytics.logEvent('CancelSaveLocation');
-    clearAllStates();
+    setName('');
   }
 
   if (ui === 'ui/ready') {
@@ -148,7 +153,7 @@ export default function HomeScreen() {
     //
     // had to remove this when switching to scrollview { justifyContent: 'flex-start' }
     return (
-      <ScrollView contentContainerStyle={[styles.scrollViewContainer]}>
+      <ScrollView contentContainerStyle={[styles.scrollViewContainer]} keyboardShouldPersistTaps="always">
         <View style={styles.rowContainer}>
           <View style={styles.labelContainer}>
             <Text style={styles.textLabel}>Latitude (LAT)</Text>
@@ -185,8 +190,6 @@ export default function HomeScreen() {
           <View style={styles.labelContainer}>
             <Text style={styles.textLabel}>Address</Text>
           </View>
-          {/* note: I was thinking to separate the (street name) from (city, region, postalCode)
-              so it looks a bit more 'aligned' but please do whatever make sense */}
           <View style={styles.coordsContainer}>
             <Text style={styles.textAddress}>{address.name}</Text>
             <Text style={styles.textAddress}>{address.city + ", " + address.region + ", " + address.postalCode}</Text>
@@ -207,7 +210,7 @@ export default function HomeScreen() {
         />
 
         <Modal
-          animationType="none"
+          animationType="fade"
           transparent={true}
           visible={saveModalVisible}
         >
@@ -225,12 +228,13 @@ export default function HomeScreen() {
                     style={[{
                       borderWidth: inputError ? 1 : 0,
                       borderColor: 'red',
-                      backgroundColor: inputError ? "lightpink" : '#f2f2f2',
+                      backgroundColor: '#f2f2f2',
                     },
                     styles.modalInput
                     ]}
                     placeholder="Set a memorable name"
                     onChangeText={setName}
+
                     value={name}
                     autoFocus={true}
                   />

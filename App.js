@@ -10,6 +10,9 @@ import * as Sentry from 'sentry-expo';
 import CustomButton from './Button';
 import SavedLocationsScreen from './SavedLocationsScreen';
 import * as Analytics from './Analytics';
+import { StatusBar } from 'react-native';
+
+StatusBar.setBarStyle('dark-content', true);
 
 function bottomIcon(route, focused) {
   if (route.name === 'Home') {
@@ -100,6 +103,7 @@ export default function App() {
             component={SavedLocationsScreen}
             options={{
               headerShown: true,
+              headerTintColor: "#000000"
             }}
           />
         </Stack.Navigator>
