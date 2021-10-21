@@ -36,7 +36,7 @@ export default function HomeScreen() {
     setName('');
     setPosition(null);
     setAddress(null);
-    setInputError(null);
+    setInputError(false);
     setSaveModalVisible(false);
   }
 
@@ -87,7 +87,6 @@ export default function HomeScreen() {
       setInputError(true)
     } else {
       await saveLocation({ position: position, name: name, address: address });
-      setInputError(false);
       clearAllStates();
     }
   }
