@@ -17,7 +17,7 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "5",
+      "buildNumber": "6",
       "supportsTablet": true,
       "bundleIdentifier": "com.dvliman.r3",
       "googleServicesFile": "./GoogleService-Info.plist"
@@ -51,7 +51,7 @@
           "config": {
             "organization": "dvliman",
             "project": "r3",
-            "authToken": "a72bd4354848439c848cf2356c1b5e321f28bf4e6a5047af9f26a1248432cb76",
+            "authToken": "98d927a74bb24d00889c87deea026a9dd8711ac3224847b9b7ddce9f9fa051e2",
             "setCommits": true
           }
         }
