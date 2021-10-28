@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "r3",
+    "name": "Save Geolocation App",
     "slug": "r3",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -17,7 +17,7 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "6",
+      "buildNumber": "1",
       "supportsTablet": true,
       "bundleIdentifier": "com.dvliman.r3",
       "googleServicesFile": "./GoogleService-Info.plist"
