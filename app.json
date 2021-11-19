@@ -17,12 +17,13 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "2",
+      "buildNumber": "3",
       "supportsTablet": true,
       "bundleIdentifier": "com.dvliman.r3",
       "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
-        "NSLocationUsageDescription": "This app uses the location to determine your current geolocation."
+        "NSLocationWhenInUseUsageDescription": "This app uses the location to determine your current geolocation.",
+        "NSLocationAlwaysUsageDescription": "This app uses the location to determine your current geolocation."
       }
     },
     "android": {
