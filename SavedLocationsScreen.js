@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, StyleSheet, Text, Alert, Share } from 'react-native';
+import { View, FlatList, StyleSheet, Text, Alert, Share, Dimensions } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getLocations, removeLocationByTimestamp, formatLocationAsText } from './Utils';
 import CustomButton from './Button';
 import * as Analytics from './Analytics';
+import MapView, { Marker } from 'react-native-maps';
 
 export default function SavedLocationsScreen() {
   const [locations, setLocations] = useState([]);
@@ -80,6 +81,19 @@ export default function SavedLocationsScreen() {
             <View style={styles.nameContainer}>
               <Text style={styles.itemName}>{item.name}</Text>
             </View>
+            <MapView style={styles.map}
+              provider={"google"}
+              initialRegion={{
+                latitude: item.position.coords.latitude,
+                longitude: item.position.coords.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }}>
+              <Marker coordinate={{
+                latitude: item.position.coords.latitude,
+                longitude: item.position.coords.longitude,
+              }} />
+            </MapView>
             <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row' }}>
               <View style={styles.coordsContainer}>
                 <Text style={styles.label}>LAT</Text>
@@ -90,7 +104,13 @@ export default function SavedLocationsScreen() {
                 <Text style={styles.coords}>{item.position.coords.longitude.toFixed(6)}</Text>
               </View>
             </View>
-            <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row' }}>
+            <View style={{
+              paddingHorizontal: 16,
+              paddingVertical: 12,
+              flexDirection: 'row',
+              borderTopWidth: 1,
+              borderTopColor: 'white',
+            }}>
               <View style={styles.coordsContainer}>
                 <Text style={styles.label}>Address</Text>
                 <Text style={styles.coords}>{item.address.name}</Text>
@@ -186,7 +206,12 @@ const styles = StyleSheet.create({
   },
   coords: {
     fontSize: 18,
-  }
+  },
+  map: {
+    flex: 1,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height / 8,
+  },
 });
 
 
