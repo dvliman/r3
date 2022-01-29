@@ -177,6 +177,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f6f6f6',
     borderRadius: 8,
     marginVertical: 8,
+    overflow: 'hidden',
   },
   itemName: {
     fontSize: 24,
