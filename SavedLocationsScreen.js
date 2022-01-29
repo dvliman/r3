@@ -83,6 +83,7 @@ export default function SavedLocationsScreen() {
             </View>
             <MapView style={styles.map}
               provider={"google"}
+              zoomEnabled={true}
               initialRegion={{
                 latitude: item.position.coords.latitude,
                 longitude: item.position.coords.longitude,
