@@ -17,29 +17,15 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "3",
+      "buildNumber": "5",
       "supportsTablet": true,
       "bundleIdentifier": "com.dvliman.r3",
-      "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app uses the location to determine your current geolocation.",
         "NSLocationAlwaysUsageDescription": "This app uses the location to determine your current geolocation."
       },
       "config": {
-        "googleMapsApiKey": "AIzaSyCoG0KvGrDletOw8cen6Zu-EG7pJ7PMjoY"
-      }
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "package": "com.dvliman.r3",
-      "googleServicesFile": "./google-services.json",
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyAEJJo-o4HS5W4akuaOgx7y_QECwUXFP5A"
-        }
+        "googleMapsApiKey": "AIzaSyDXD3heSXEvSawe3ccBwz1pRPQv0KTViCc"
       }
     },
     "web": {

@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { getLocations, removeLocationByTimestamp, formatLocationAsText } from './Utils';
 import CustomButton from './Button';
 import * as Analytics from './Analytics';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 export default function SavedLocationsScreen() {
   const [locations, setLocations] = useState([]);
@@ -82,7 +82,7 @@ export default function SavedLocationsScreen() {
               <Text style={styles.itemName}>{item.name}</Text>
             </View>
             <MapView style={styles.map}
-              provider={"google"}
+              provider={PROVIDER_GOOGLE}
               zoomEnabled={true}
               initialRegion={{
                 latitude: item.position.coords.latitude,
