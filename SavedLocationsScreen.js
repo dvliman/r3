@@ -171,7 +171,6 @@ export default function SavedLocationsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
     paddingVertical: 8,
     paddingHorizontal: 16,
   },
