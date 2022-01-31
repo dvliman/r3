@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "664301208583",
+    "project_id": "r3r3-9cda9",
+    "storage_bucket": "r3r3-9cda9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664301208583:android:201ad5828f1c695b9856a2",
+        "android_client_info": {
+          "package_name": "com.dvliman.r3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "664301208583-04hoe98ikv1sma4onp6r0rj2o5kirbnv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEJJo-o4HS5W4akuaOgx7y_QECwUXFP5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "664301208583-04hoe98ikv1sma4onp6r0rj2o5kirbnv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "664301208583-hgs16q0gp5g11b5ha5c3g2kli9ubd1s0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dvliman.r3"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
