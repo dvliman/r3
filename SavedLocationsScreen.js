@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: 'black',
     fontWeight: '500',
+    marginBottom: Dimensions.get('window').height / 8,
   },
   nameContainer: {
     borderBottomColor: 'white',
@@ -212,6 +213,7 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
     flex: 1,
+    top: 53,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height / 8,
   },
