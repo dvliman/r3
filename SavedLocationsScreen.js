@@ -95,16 +95,6 @@ export default function SavedLocationsScreen() {
                 longitude: item.position.coords.longitude,
               }} />
             </MapView>
-            <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row' }}>
-              <View style={styles.coordsContainer}>
-                <Text style={styles.label}>LAT</Text>
-                <Text style={styles.coords}>{item.position.coords.latitude.toFixed(6)}</Text>
-              </View>
-              <View style={styles.coordsContainer}>
-                <Text style={styles.label}>LONG</Text>
-                <Text style={styles.coords}>{item.position.coords.longitude.toFixed(6)}</Text>
-              </View>
-            </View>
             <View style={{
               paddingHorizontal: 16,
               paddingVertical: 12,
